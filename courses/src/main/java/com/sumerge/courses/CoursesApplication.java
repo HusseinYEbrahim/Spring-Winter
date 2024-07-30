@@ -9,9 +9,9 @@ public class CoursesApplication {
 
 	static CourseRecommender courseRecommender;
 
-	CoursesApplication(@Qualifier("views") CourseRecommender courseRecommender)
+	CoursesApplication(CourseRecommender ratingRecommender)
 	{
-		CoursesApplication.courseRecommender = courseRecommender;
+		CoursesApplication.courseRecommender = ratingRecommender;
 	} 
 
 	public static void main(String[] args) {
