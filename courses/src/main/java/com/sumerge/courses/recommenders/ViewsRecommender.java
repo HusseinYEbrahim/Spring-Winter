@@ -1,7 +1,10 @@
 package com.sumerge.courses.recommenders;
 
+import org.springframework.stereotype.Component;
+
 import com.sumerge.courses.CourseRecommender;
 
+@Component
 public class ViewsRecommender implements CourseRecommender {
 
     @Override
