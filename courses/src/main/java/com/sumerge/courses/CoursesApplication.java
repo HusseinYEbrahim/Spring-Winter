@@ -9,9 +9,9 @@ public class CoursesApplication {
 
 	static CourseRecommender courseRecommender;
 
-	CoursesApplication(CourseRecommender ratingRecommender)
+	CoursesApplication(CourseRecommender viewsRecommender)
 	{
-		CoursesApplication.courseRecommender = ratingRecommender;
+		CoursesApplication.courseRecommender = viewsRecommender;
 	} 
 
 	public static void main(String[] args) {
