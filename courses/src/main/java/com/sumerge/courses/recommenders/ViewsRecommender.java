@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.sumerge.courses.CourseRecommender;
 
-@Component
+@Component("views")
 public class ViewsRecommender implements CourseRecommender {
 
     @Override

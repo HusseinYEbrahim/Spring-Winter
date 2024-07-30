@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.sumerge.courses.CourseRecommender;
 
-@Component
-@Primary
+@Component("ratings")
 public class RatingRecommender implements CourseRecommender {
 
     @Override

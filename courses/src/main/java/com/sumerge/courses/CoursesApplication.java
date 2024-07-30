@@ -1,5 +1,6 @@
 package com.sumerge.courses;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,7 +9,7 @@ public class CoursesApplication {
 
 	static CourseRecommender courseRecommender;
 
-	CoursesApplication(CourseRecommender courseRecommender)
+	CoursesApplication(@Qualifier("views") CourseRecommender courseRecommender)
 	{
 		CoursesApplication.courseRecommender = courseRecommender;
 	} 
