@@ -1,16 +1,16 @@
 package com.sumerge.courses;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.sumerge.courses.models.Course;
+import com.sumerge.courses.repositories.CourseRepository;
 
 @Component
 public class CourseService {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    CourseRepository courseRepository;
 
     CourseRecommender courseRecommender;
 
@@ -19,11 +19,24 @@ public class CourseService {
         this.courseRecommender = courseRecommender;
     }
 
-    public boolean addCourse(Course c)
+    public int addCourse(Course c)
     {
-        String sql = "select * from messi;";
-        jdbcTemplate.execute(sql);
-        return true;
+        return courseRepository.save(c);
+    }
+
+    public int UpdateCourseDescription(Course c, String description)
+    {
+        return courseRepository.updateDescription(c.getId(), description);
+    }
+
+    public int deleteCourse(Course c)
+    {
+        return courseRepository.deleteCourse(c.getId());
+    }
+
+    public Course viewCourse(String courseId)
+    {
+        return courseRepository.getById(courseId);
     }
 
     
