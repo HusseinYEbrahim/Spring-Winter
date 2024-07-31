@@ -1,13 +1,13 @@
 package com.sumerge.courses;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourseService {
 
     CourseRecommender courseRecommender;
 
-    @Autowired
-    public void setCourseRecommender(CourseRecommender courseRecommender)
+    public CourseService(CourseRecommender courseRecommender)
     {
         this.courseRecommender = courseRecommender;
     }
