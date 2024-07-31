@@ -19,8 +19,7 @@ public class CoursesApplication {
 	public static void main(String[] args) {
 		
 		SpringApplication.run(CoursesApplication.class, args);
-		System.out.println(courseService.courseRecommender.recommend());
-
+		courseService.addCourse(null);
 	}
 
 }
