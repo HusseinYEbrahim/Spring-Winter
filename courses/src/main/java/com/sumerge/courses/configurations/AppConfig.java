@@ -5,8 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -44,14 +42,13 @@ public class AppConfig {
     }
 
     @Bean
-    @Primary
-    public RatingRecommender getRatingRecommender()
+    public RatingRecommender ratingRecommender()
     {
         return new RatingRecommender();
     }
 
     @Bean
-    public ViewsRecommender getViewsRecommender()
+    public ViewsRecommender viewsRecommender()
     {
         return new ViewsRecommender();
     }
@@ -63,8 +60,8 @@ public class AppConfig {
     }
 
     @Bean 
-    public CourseService getCourseService(CourseRecommender cr)
+    public CourseService getCourseService(CourseRecommender ratingRecommender)
     {
-        return new CourseService(cr);
+        return new CourseService(ratingRecommender);
     }
 }
