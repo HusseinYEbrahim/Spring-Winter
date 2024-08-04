@@ -64,4 +64,25 @@ public class CourseRepository {
         }
         return result;
     }
+
+    /*
+     * It gets the top 3 rated courses by their avg rating, because a course can have multiple ratings
+     */
+    public List<Course> getBestThreeRatings()
+    {
+        String sql = "select C.* "+
+                    "from course C inner join rating R "+ 
+                        "on C.id = R.course_id "+
+                    "group by C.id "+
+                    "order by AVG(R.rating) DESC "+
+                    "limit 3;";
+        ArrayList<Map<String, Object>> rows =  (ArrayList<Map<String, Object>>) jdbcTemplate.queryForList(sql);
+        ArrayList<Course> result = new ArrayList<>();
+        for(Map<String, Object> row : rows)
+        {
+            Course c = new Course((String)row.get("id"), (String)row.get("name"), (String)row.get("description"), (Integer)row.get("credit"));
+            result.add(c);
+        }
+        return result;
+    }
 }

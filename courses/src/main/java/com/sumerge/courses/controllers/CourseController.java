@@ -53,4 +53,10 @@ public class CourseController {
     {
         return courseService.viewAllCourses();
     }
+
+    @GetMapping("/courses/discover")
+    public List<Course> getRecommendations()
+    {
+        return courseService.getCourseRecommender().recommend();
+    }
 }

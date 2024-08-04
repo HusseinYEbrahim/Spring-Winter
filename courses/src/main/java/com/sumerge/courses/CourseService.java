@@ -8,12 +8,15 @@ import org.springframework.stereotype.Component;
 import com.sumerge.courses.models.Course;
 import com.sumerge.courses.repositories.CourseRepository;
 
+import lombok.Getter;
+
 @Component
 public class CourseService {
 
     @Autowired
     CourseRepository courseRepository;
 
+    @Getter
     CourseRecommender courseRecommender;
 
     public CourseService(CourseRecommender courseRecommender)

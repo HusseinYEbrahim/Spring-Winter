@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 public class Rating {
     
     String id;
+    String courseId;
     int rating;
     
 }

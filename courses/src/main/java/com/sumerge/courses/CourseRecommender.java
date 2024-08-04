@@ -1,8 +1,12 @@
 
 package com.sumerge.courses;
 
+import java.util.List;
+
+import com.sumerge.courses.models.Course;
+
 public interface CourseRecommender {
 
-    public String recommend();
+    public List<Course> recommend();
     
 }
