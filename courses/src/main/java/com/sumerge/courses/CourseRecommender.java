@@ -1,4 +1,3 @@
-
 package com.sumerge.courses;
 
 public interface CourseRecommender {
