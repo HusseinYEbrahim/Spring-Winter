@@ -18,7 +18,10 @@ public class CoursesApplication {
 	public static void main(String[] args) {
 		
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);	
-		
+		CourseService cs = context.getBean(CourseService.class);
+		System.out.println(cs.courseRecommender.recommend());
+
+		context.close();
 	}
 
 }

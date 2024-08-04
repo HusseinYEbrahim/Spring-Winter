@@ -6,16 +6,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import com.sumerge.courses.CourseRecommender;
 import com.sumerge.courses.CourseService;
 import com.sumerge.courses.recommenders.RatingRecommender;
 import com.sumerge.courses.recommenders.ViewsRecommender;
 import com.sumerge.courses.repositories.CourseRepository;
 
 @Configuration
-@Import({CourseService.class, ViewsRecommender.class, RatingRecommender.class, CourseRepository.class})
 public class AppConfig {
 
     @Value("${spring.datasource.url}")
@@ -40,5 +41,30 @@ public class AppConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @Primary
+    public RatingRecommender getRatingRecommender()
+    {
+        return new RatingRecommender();
+    }
+
+    @Bean
+    public ViewsRecommender getViewsRecommender()
+    {
+        return new ViewsRecommender();
+    }
+
+    @Bean 
+    public CourseRepository getCourseRepository()
+    {
+        return new CourseRepository();
+    }
+
+    @Bean 
+    public CourseService getCourseService(CourseRecommender cr)
+    {
+        return new CourseService(cr);
     }
 }
