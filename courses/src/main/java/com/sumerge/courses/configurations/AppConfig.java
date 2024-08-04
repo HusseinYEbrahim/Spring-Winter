@@ -17,10 +17,8 @@ import com.sumerge.courses.repositories.CourseRepository;
 
 import sumerge.recommenders.HusseinRecommender;
 
-
-
 @Configuration
-@Import(HusseinRecommender.class)
+@Import({HusseinRecommender.class})
 public class AppConfig {
 
     @Value("${spring.datasource.url}")
@@ -48,15 +46,25 @@ public class AppConfig {
     }
 
     @Bean
-    public RatingRecommender ratingRecommender()
+    public CourseRecommender ratingRecommender()
     {
         return new RatingRecommender();
     }
 
     @Bean
-    public ViewsRecommender viewsRecommender()
+    public CourseRecommender viewsRecommender()
     {
         return new ViewsRecommender();
+    }
+
+    @Bean 
+    public CourseRecommender husseinRecommender()
+    {
+        return new CourseRecommender() {
+            public String recommend(){
+                return "Overriden value !!";
+            }
+        };
     }
 
     @Bean 
@@ -66,7 +74,7 @@ public class AppConfig {
     }
 
     @Bean 
-    public CourseService getCourseService(HusseinRecommender husseinRecommender)
+    public CourseService getCourseService(CourseRecommender husseinRecommender)
     {
         return new CourseService(husseinRecommender);
     }
