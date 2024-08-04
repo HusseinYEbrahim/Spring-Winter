@@ -1,4 +1,5 @@
-package main.java.sumerge;
+package sumerge.recommenders;
+
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

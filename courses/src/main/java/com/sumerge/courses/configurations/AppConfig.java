@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -14,7 +15,12 @@ import com.sumerge.courses.recommenders.RatingRecommender;
 import com.sumerge.courses.recommenders.ViewsRecommender;
 import com.sumerge.courses.repositories.CourseRepository;
 
+import sumerge.recommenders.HusseinRecommender;
+
+
+
 @Configuration
+@Import(HusseinRecommender.class)
 public class AppConfig {
 
     @Value("${spring.datasource.url}")
@@ -60,8 +66,8 @@ public class AppConfig {
     }
 
     @Bean 
-    public CourseService getCourseService(CourseRecommender ratingRecommender)
+    public CourseService getCourseService(HusseinRecommender husseinRecommender)
     {
-        return new CourseService(ratingRecommender);
+        return new CourseService(husseinRecommender);
     }
 }
