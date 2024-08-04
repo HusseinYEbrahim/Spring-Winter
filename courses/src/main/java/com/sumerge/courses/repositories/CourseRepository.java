@@ -1,5 +1,9 @@
 package com.sumerge.courses.repositories;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -46,5 +50,18 @@ public class CourseRepository {
     {
         String sql = "delete from course where id = '?';";
         return jdbcTemplate.update(sql, courseId);
+    }
+
+    public List<Course> getAll()
+    {
+        String sql = "select * from course;";
+        ArrayList<Map<String, Object>> rows =  (ArrayList<Map<String, Object>>) jdbcTemplate.queryForList(sql);
+        ArrayList<Course> result = new ArrayList<>();
+        for(Map<String, Object> row : rows)
+        {
+            Course c = new Course((String)row.get("id"), (String)row.get("name"), (String)row.get("description"), (Integer)row.get("credit"));
+            result.add(c);
+        }
+        return result;
     }
 }

@@ -1,5 +1,7 @@
 package com.sumerge.courses;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,19 +26,24 @@ public class CourseService {
         return courseRepository.save(c);
     }
 
-    public int UpdateCourseDescription(Course c, String description)
+    public int UpdateCourseDescription(String id, String description)
     {
-        return courseRepository.updateDescription(c.getId(), description);
+        return courseRepository.updateDescription(id, description);
     }
 
-    public int deleteCourse(Course c)
+    public int deleteCourse(String id)
     {
-        return courseRepository.deleteCourse(c.getId());
+        return courseRepository.deleteCourse(id);
     }
 
     public Course viewCourse(String courseId)
     {
         return courseRepository.getById(courseId);
+    }
+
+    public List<Course> viewAllCourses()
+    {
+        return courseRepository.getAll();
     }
 
     
