@@ -13,7 +13,9 @@ create table author (
 
 create table rating (
     id VARCHAR(255) Primary Key,
-    number INT
+    course_id VARCHAR(255),
+    rating INT,
+    Foreign Key (course_id) References course(id)
 );
 
 create table assessment (
