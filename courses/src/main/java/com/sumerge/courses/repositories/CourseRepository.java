@@ -42,13 +42,13 @@ public class CourseRepository {
 
     public int updateDescription(String courseId, String description)
     {
-        String sql = "update course set description = '?' where id = '?';";
+        String sql = "update course set description = ? where id = ?;";
         return jdbcTemplate.update(sql, description, courseId);
     }
 
     public int deleteCourse(String courseId)
     {
-        String sql = "delete from course where id = '?';";
+        String sql = "delete from course where id = ?;";
         return jdbcTemplate.update(sql, courseId);
     }
 
