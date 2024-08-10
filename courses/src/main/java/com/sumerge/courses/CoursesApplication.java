@@ -1,8 +1,9 @@
 package com.sumerge.courses;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.sumerge.courses.services.CourseService;
 
 
 @SpringBootApplication
@@ -10,7 +11,6 @@ public class CoursesApplication {
 
 	static CourseService courseService;
 
-	@Autowired
 	CoursesApplication(CourseService courseService)
 	{
 		CoursesApplication.courseService = courseService;
