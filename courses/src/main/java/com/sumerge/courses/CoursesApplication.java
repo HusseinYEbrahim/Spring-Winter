@@ -1,14 +1,14 @@
 package com.sumerge.courses;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.sumerge.courses.services.CourseService;
 
 
 @SpringBootApplication
 public class CoursesApplication {
 
-	@Autowired
 	static CourseService courseService;
 
 	CoursesApplication(CourseService courseService)
@@ -17,10 +17,7 @@ public class CoursesApplication {
 	}
 
 	public static void main(String[] args) {
-		
 		SpringApplication.run(CoursesApplication.class, args);
-		System.out.println(courseService.courseRecommender.recommend());
-
 	}
 
 }
