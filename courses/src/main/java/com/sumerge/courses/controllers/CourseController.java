@@ -1,62 +1,120 @@
 package com.sumerge.courses.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sumerge.courses.CourseService;
+import com.sumerge.courses.dto.courses.GetCourseDTO;
+import com.sumerge.courses.dto.courses.PostCourseDTO;
+import com.sumerge.courses.dto.rating.RatingDTO;
+import com.sumerge.courses.exceptions.AuthorNotFoundException;
+import com.sumerge.courses.exceptions.CourseNotFoundException;
+import com.sumerge.courses.exceptions.NoAuthorsForCourseException;
+import com.sumerge.courses.mappers.courses.GetCourseDTOMapper;
+import com.sumerge.courses.mappers.courses.PostCourseDTOMapper;
+import com.sumerge.courses.mappers.rating.GetRatingDTOMapper;
 import com.sumerge.courses.models.Course;
+import com.sumerge.courses.models.Rating;
+import com.sumerge.courses.services.CourseService;
 
 @RestController
+@RequestMapping("/courses")
 public class CourseController {
     
     @Autowired
     CourseService courseService;
 
-    @PostMapping("/courses/add")
-    public String add(@RequestBody Course course)
+    @Autowired
+    PostCourseDTOMapper postCourseDTOMapper;
+
+    @Autowired
+    GetCourseDTOMapper getCourseDTOMapper;
+
+    @Autowired 
+    GetRatingDTOMapper getRatingDTOMapper;
+
+    @PostMapping("/add")
+    public ResponseEntity<String> add(@RequestBody PostCourseDTO courseDTO)
     {
-        int affectedRows = courseService.addCourse(course);
-        return affectedRows + " rows are affected";
+        Course course = postCourseDTOMapper.mapToCourse(courseDTO);
+        Set<Integer> authorIds = courseDTO.getAuthorIds();
+        try {
+            Course saved = courseService.addCourse(course, authorIds);
+            return ResponseEntity.ok().body("course is added successfully with id " + saved.getId());
+        } catch (AuthorNotFoundException e) {
+            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
+        } catch (NoAuthorsForCourseException e) {
+            return ResponseEntity.badRequest().body("error occurred : " + e.getMessage());
+        } 
     }
 
-    @GetMapping("/courses/view/{id}")
-    public Course view(@PathVariable String id)
+    @GetMapping("/view/{id}")
+    public ResponseEntity<Object> view(@PathVariable Integer id)
     {
-        Course course = courseService.viewCourse(id);
-        return course;
+        try {
+            GetCourseDTO getCourseDTO = courseService.viewCourse(id);
+            return ResponseEntity.ok().body(getCourseDTO);
+        } catch (CourseNotFoundException e) {
+            return ResponseEntity.badRequest().body("error occured : " + e.getMessage()); 
+        }
     }
 
-    @PutMapping("/courses/update/description/{id}")
-    public String updateCourseDescription(@PathVariable String id, @RequestBody String description)
+    @PutMapping("/update/description/{id}")
+    public ResponseEntity<String> updateCourseDescription(@PathVariable Integer id, @RequestBody String description)
     {
-        int affectedRows = courseService.UpdateCourseDescription(id, description);
-        return affectedRows + " rows are affected";
+        try {
+            courseService.UpdateCourseDescription(id, description);
+            return ResponseEntity.ok().body("course " + id +" has been updated successfully");
+        } catch (CourseNotFoundException e) {
+            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
+        }
     }
 
-    @DeleteMapping("/courses/delete/{id}")
-    public String delete(@PathVariable String id)
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Integer id)
     {
-        int affectedRows = courseService.deleteCourse(id);
-        return affectedRows + " are affected";
+        try {
+            courseService.deleteCourse(id);
+            return ResponseEntity.ok().body(null);
+        } catch (CourseNotFoundException e) {
+            return ResponseEntity.badRequest().body("error occurred : " + e.getMessage());
+        }
     }
 
-    @GetMapping("/courses")
-    public List<Course> viewAll()
+    @GetMapping("/all")
+    public ResponseEntity<List<GetCourseDTO>> viewAll(Pageable page)
     {
-        return courseService.viewAllCourses();
+        System.out.println(page.getPageSize() + " " + page.getPageNumber());
+        return ResponseEntity.ok().body(courseService.viewAllCourses(page));
     }
 
-    @GetMapping("/courses/discover")
-    public List<Course> getRecommendations()
+    @GetMapping("/discover")
+    public ResponseEntity<List<GetCourseDTO>> getRecommendations()
     {
-        return courseService.getCourseRecommender().recommend();
+        return ResponseEntity.ok().body(courseService.getCourseRecommender().recommend());
+    }
+
+    @PostMapping("/rate/{id}")
+    public ResponseEntity<Object> rateCourse(@RequestParam Integer id, @RequestBody RatingDTO getRatingDTO)
+    {
+        Rating rating = getRatingDTOMapper.mapToRating(getRatingDTO);
+        try {
+            courseService.rateCourse(id, rating);
+            return ResponseEntity.ok().body(null);
+        } catch (CourseNotFoundException e) {
+            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
+        }
     }
 }
