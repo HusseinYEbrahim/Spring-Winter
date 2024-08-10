@@ -5,16 +5,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.sumerge.courses.CourseRecommender;
-import com.sumerge.courses.models.Course;
+import com.sumerge.courses.dto.courses.GetCourseDTO;
 
 @Component
 public class ViewsRecommender implements CourseRecommender {
 
     @Override
-    public List<Course> recommend() {
-        Course bestViewed = new Course("1", "BEST VIEWED", "BEST VIEWED BARDO", 2);
-        ArrayList<Course> reccomendations = new ArrayList<>();
+    public List<GetCourseDTO> recommend() {
+        
+        GetCourseDTO bestViewed = GetCourseDTO.builder().description("").authors(null)
+            .credit(2).name("Math3").ratings(null).build();
+        ArrayList<GetCourseDTO> reccomendations = new ArrayList<>();
         reccomendations.add(bestViewed);
         return reccomendations;
     }
