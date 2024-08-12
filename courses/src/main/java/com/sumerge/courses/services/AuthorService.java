@@ -56,5 +56,4 @@ public class AuthorService {
     {
         return authorRepository.findByEmailStartingWith(emailPrefix);
     }
-    
 }

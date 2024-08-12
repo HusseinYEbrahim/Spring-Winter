@@ -1,6 +1,5 @@
 package com.sumerge.courses.controllers;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,75 +45,53 @@ public class CourseController {
     GetRatingDTOMapper getRatingDTOMapper;
 
     @PostMapping("/add")
-    public ResponseEntity<String> add(@RequestBody PostCourseDTO courseDTO)
+    public ResponseEntity<Object> add(@RequestBody PostCourseDTO courseDTO) throws NoAuthorsForCourseException, AuthorNotFoundException
     {
         Course course = postCourseDTOMapper.mapToCourse(courseDTO);
         Set<Integer> authorIds = courseDTO.getAuthorIds();
-        try {
-            Course saved = courseService.addCourse(course, authorIds);
-            return ResponseEntity.ok().body("course is added successfully with id " + saved.getId());
-        } catch (AuthorNotFoundException e) {
-            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
-        } catch (NoAuthorsForCourseException e) {
-            return ResponseEntity.badRequest().body("error occurred : " + e.getMessage());
-        } 
+        Course saved = courseService.addCourse(course, authorIds);
+        return ResponseEntity.ok().body("course is added successfully with id " + saved.getId());
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Object> view(@PathVariable Integer id)
+    public ResponseEntity<Object> view(@PathVariable Integer id) throws CourseNotFoundException
     {
-        try {
-            GetCourseDTO getCourseDTO = courseService.viewCourse(id);
-            return ResponseEntity.ok().body(getCourseDTO);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.badRequest().body("error occured : " + e.getMessage()); 
-        }
+        GetCourseDTO getCourseDTO = courseService.viewCourse(id);
+        return ResponseEntity.ok().body(getCourseDTO);
     }
 
     @PutMapping("/update/description/{id}")
-    public ResponseEntity<String> updateCourseDescription(@PathVariable Integer id, @RequestBody String description)
+    public ResponseEntity<Object> updateCourseDescription(@PathVariable Integer id, @RequestBody String description) throws CourseNotFoundException
     {
-        try {
-            courseService.UpdateCourseDescription(id, description);
-            return ResponseEntity.ok().body("course " + id +" has been updated successfully");
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
-        }
+        courseService.UpdateCourseDescription(id, description);
+        return ResponseEntity.ok().body("course " + id +" has been updated successfully");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Integer id)
+    public ResponseEntity<Object> delete(@PathVariable Integer id) throws CourseNotFoundException
     {
-        try {
-            courseService.deleteCourse(id);
-            return ResponseEntity.ok().body(null);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.badRequest().body("error occurred : " + e.getMessage());
-        }
+        courseService.deleteCourse(id);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<GetCourseDTO>> viewAll(Pageable page)
+    public ResponseEntity<Object> viewAll(Pageable page)
     {
         System.out.println(page.getPageSize() + " " + page.getPageNumber());
         return ResponseEntity.ok().body(courseService.viewAllCourses(page));
     }
 
     @GetMapping("/discover")
-    public ResponseEntity<List<GetCourseDTO>> getRecommendations()
+    public ResponseEntity<Object> getRecommendations()
     {
         return ResponseEntity.ok().body(courseService.getCourseRecommender().recommend());
     }
 
     @PostMapping("/rate/{id}")
-    public ResponseEntity<Object> rateCourse(@RequestParam Integer id, @RequestBody RatingDTO getRatingDTO)
+    public ResponseEntity<Object> rateCourse(@RequestParam Integer id, @RequestBody RatingDTO getRatingDTO) throws CourseNotFoundException
     {
         Rating rating = getRatingDTOMapper.mapToRating(getRatingDTO);
-        try {
-            courseService.rateCourse(id, rating);
-            return ResponseEntity.ok().body(null);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.badRequest().body("error occured : " + e.getMessage());
-        }
+        courseService.rateCourse(id, rating);
+        return ResponseEntity.ok().body(null);
     }
 }

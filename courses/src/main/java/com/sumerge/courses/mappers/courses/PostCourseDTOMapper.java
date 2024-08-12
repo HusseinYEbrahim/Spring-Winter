@@ -10,7 +10,7 @@ import com.sumerge.courses.models.Course;
 @Mapper(componentModel = "spring")
 public interface PostCourseDTOMapper {
 
-    @Mapping(target = "authorIds", ignore = true)
+    // @Mapping(target = "authorIds", ignore = true)
     PostCourseDTO mapToDto(Course course);
 
     @Mappings({

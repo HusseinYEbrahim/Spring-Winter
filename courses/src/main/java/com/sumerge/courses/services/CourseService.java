@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,40 +24,29 @@ import com.sumerge.courses.repositories.AuthorRepository;
 import com.sumerge.courses.repositories.CourseRepository;
 import com.sumerge.courses.repositories.RatingRepository;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Service
+@AllArgsConstructor
 public class CourseService {
 
-    @Autowired
     CourseRepository courseRepository;
 
-    @Autowired
     AssessmentRepository assessmentRepository;
 
-    @Autowired
     AuthorRepository authorRepository;
 
-    @Autowired
     RatingRepository ratingRepository;
 
-    @Autowired
     AuthorService authorService;
 
-    @Autowired
     RatingService ratingService;
 
     @Getter
     CourseRecommender courseRecommender;
 
-    @Autowired
     GetCourseDTOMapper getCourseDTOMapper;
-
-    public CourseService(CourseRecommender courseRecommender, CourseRepository courseRepository)
-    {
-        this.courseRecommender = courseRecommender;
-        this.courseRepository = courseRepository;
-    }
 
     public Course get(Integer id) throws CourseNotFoundException
     {
@@ -68,7 +56,7 @@ public class CourseService {
         throw new CourseNotFoundException("course with id " + id + " is not found");
     }
 
-    public Course addCourse(Course c, Set<Integer> authorIds) throws AuthorNotFoundException, NoAuthorsForCourseException
+    public Course addCourse(Course c, Set<Integer> authorIds) throws NoAuthorsForCourseException, AuthorNotFoundException
     {
         if(authorIds.isEmpty())
             throw new NoAuthorsForCourseException("at least one author is required to create course");
