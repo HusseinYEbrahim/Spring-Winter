@@ -12,4 +12,6 @@ public class PostAuthorDTO {
     LocalDate birthDate;
 
     String email;
+
+    String password;
 }
