@@ -7,12 +7,16 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.sumerge.courses.dto.courses.GetCourseDTO;
 import com.sumerge.courses.exceptions.AuthorNotFoundException;
 import com.sumerge.courses.exceptions.CourseNotFoundException;
 import com.sumerge.courses.exceptions.NoAuthorsForCourseException;
+import com.sumerge.courses.exceptions.NotAuthorOfCourseException;
 import com.sumerge.courses.mappers.courses.GetCourseDTOMapper;
 import com.sumerge.courses.models.Assessment;
 import com.sumerge.courses.models.Author;
@@ -70,9 +74,14 @@ public class CourseService {
         return saved; 
     }
 
-    public void UpdateCourseDescription(Integer id, String description) throws CourseNotFoundException
+    public void UpdateCourseDescription(Integer id, String description) throws CourseNotFoundException, NotAuthorOfCourseException
     {
         Course course = get(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object userPrincipal = authentication.getPrincipal();
+        String authorName = userPrincipal instanceof UserDetails ? ((UserDetails)userPrincipal).getUsername() : null;
+        System.out.println(authorName);
+        isAuthoredCourse(course, authorName);
         course.setDescription(description);
         courseRepository.save(course);
     }
@@ -110,6 +119,14 @@ public class CourseService {
         rating.setCourse(course);
         courseRepository.save(course);
         ratingRepository.save(rating);
+    }
+
+    public boolean isAuthoredCourse(Course course, String authorUserName) throws NotAuthorOfCourseException
+    {
+        for(Author author : course.getAuthors())
+            if(author.getName().equals(authorUserName))
+                return true;
+        throw new NotAuthorOfCourseException(authorUserName + " is not author of course " + course.getId());
     }
 
 }

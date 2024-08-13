@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(NotAuthorOfCourseException.class)
+    public ResponseEntity<Object> handleNotAuthorOfCourseException(Exception ex)
+    {
+        return ResponseEntity.status(401).body(ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleExceptions(Exception ex)
     {
