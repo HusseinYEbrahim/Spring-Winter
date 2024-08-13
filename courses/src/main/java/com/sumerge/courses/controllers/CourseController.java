@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sumerge.courses.dto.courses.GetCourseDTO;
@@ -21,6 +20,7 @@ import com.sumerge.courses.dto.rating.RatingDTO;
 import com.sumerge.courses.exceptions.AuthorNotFoundException;
 import com.sumerge.courses.exceptions.CourseNotFoundException;
 import com.sumerge.courses.exceptions.NoAuthorsForCourseException;
+import com.sumerge.courses.exceptions.NotAuthorOfCourseException;
 import com.sumerge.courses.mappers.courses.GetCourseDTOMapper;
 import com.sumerge.courses.mappers.courses.PostCourseDTOMapper;
 import com.sumerge.courses.mappers.rating.GetRatingDTOMapper;
@@ -50,7 +50,7 @@ public class CourseController {
         Course course = postCourseDTOMapper.mapToCourse(courseDTO);
         Set<Integer> authorIds = courseDTO.getAuthorIds();
         Course saved = courseService.addCourse(course, authorIds);
-        return ResponseEntity.ok().body("course is added successfully with id " + saved.getId());
+        return ResponseEntity.status(201).body("course is added successfully with id " + saved.getId());
     }
 
     @GetMapping("/view/{id}")
@@ -61,7 +61,7 @@ public class CourseController {
     }
 
     @PutMapping("/update/description/{id}")
-    public ResponseEntity<Object> updateCourseDescription(@PathVariable Integer id, @RequestBody String description) throws CourseNotFoundException
+    public ResponseEntity<Object> updateCourseDescription(@PathVariable Integer id, @RequestBody String description) throws CourseNotFoundException, NotAuthorOfCourseException
     {
         courseService.UpdateCourseDescription(id, description);
         return ResponseEntity.ok().body("course " + id +" has been updated successfully");
@@ -88,7 +88,7 @@ public class CourseController {
     }
 
     @PostMapping("/rate/{id}")
-    public ResponseEntity<Object> rateCourse(@RequestParam Integer id, @RequestBody RatingDTO getRatingDTO) throws CourseNotFoundException
+    public ResponseEntity<Object> rateCourse(@PathVariable Integer id, @RequestBody RatingDTO getRatingDTO) throws CourseNotFoundException
     {
         Rating rating = getRatingDTOMapper.mapToRating(getRatingDTO);
         courseService.rateCourse(id, rating);
