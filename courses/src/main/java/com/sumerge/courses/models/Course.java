@@ -41,7 +41,7 @@ public class Course {
     )
     int credit;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     Set<Rating> ratings;
 
     @OneToOne(cascade = CascadeType.ALL)
